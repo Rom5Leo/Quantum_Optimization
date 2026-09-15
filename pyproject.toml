@@ -8,11 +8,13 @@ packages = [{ include = "qc_core", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-numpy = "^1.26"
+numpy = "^2.0"
 matplotlib = "^3.8"
 pyomo = "^6.7"
 scipy = "^1.12"
 # classiq = "^0.x"   # pin to the version your account uses
+qiskit = "^2.5.2"
+qiskit-aer = "^0.17.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0"
@@ -22,3 +24,9 @@ ruff = "^0.5"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:The class .* is deprecated as of Qiskit:DeprecationWarning",
+]
+
