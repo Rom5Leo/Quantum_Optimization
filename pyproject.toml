@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "qc-core"
+version = "0.1.0"
+description = "Reusable quantum-optimization library: QAOA, QUBO, RF models, on Classiq/Qmod"
+authors = ["Rom5Leo"]
+readme = "README.md"
+packages = [{ include = "qc_core", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "^1.26"
+matplotlib = "^3.8"
+pyomo = "^6.7"
+scipy = "^1.12"
+# classiq = "^0.x"   # pin to the version your account uses
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+jupyter = "^1.0"
+ruff = "^0.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
