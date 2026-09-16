@@ -1,6 +1,6 @@
 """Classiq QAOA runner.
 
-Solves a :class:`~qc_core.qubo.core.QUBO` with QAOA on the Classiq simulator, following the
+Solves a :class:`~optlib.qubo.core.QUBO` with QAOA on the Classiq simulator, following the
 verified pattern from the antenna notebooks: build the parametric ``main`` circuit, drive it
 from Python with ``ExecutionSession`` + SciPy (NOT the IDE Execute button), then decode the
 sampled result with the shared read-out helpers.
@@ -17,8 +17,8 @@ from __future__ import annotations
 import numpy as np
 from scipy.optimize import minimize
 
-from qc_core.qubo.core import QUBO
-from qc_core.qaoa.common import QAOAResult, adiabatic_init, best_bits_from_counts
+from qcoptlib.qubo.core import QUBO
+from qcoptlib.quantum.common import QAOAResult, adiabatic_init, best_bits_from_counts
 
 
 def qubo_to_pauli_terms(qubo: QUBO) -> list[tuple[str, float]]:

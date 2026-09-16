@@ -1,4 +1,4 @@
-"""Tests for qc_core.qaoa.
+"""Tests for optlib.quantum.
 
 - Shared helpers (adiabatic_init, best_bits_from_counts) — fast, deterministic.
 - Qiskit backend — end-to-end on a small partition problem, checked against brute force.
@@ -10,9 +10,9 @@ of a small instance whose answer we know from the QUBO's own brute_force.
 import numpy as np
 import pytest
 
-from qc_core.qubo.core import QUBO
-from qc_core.qubo.partition import partition_qubo, split_from_bits
-from qc_core.qaoa.common import adiabatic_init, best_bits_from_counts, QAOAResult
+from qcoptlib.qubo.core import QUBO
+from qcoptlib.qubo.partition import partition_qubo, split_from_bits
+from qcoptlib.quantum.common import adiabatic_init, best_bits_from_counts, QAOAResult
 
 
 # ----------------------------- shared helpers -----------------------------
@@ -39,7 +39,7 @@ def test_best_bits_from_counts_picks_lowest_energy():
 
 def test_qiskit_solves_small_partition():
     """QAOA on Aer recovers the optimal split of a small partition instance."""
-    from qc_core.qaoa.qiskit_backend import solve_qubo_qaoa
+    from qcoptlib.quantum.qiskit_backend import solve_qubo_qaoa
 
     values = [3, 4, 5, 6]           # small enough for reliable QAOA + brute-force check
     q = partition_qubo(values)
@@ -57,7 +57,7 @@ def test_qiskit_solves_small_partition():
 
 def test_qiskit_sparse_pauli_matches_ising_energy():
     """The SparsePauliOp cost operator must reproduce the QUBO's Ising energies."""
-    from qc_core.qaoa.qiskit_backend import qubo_to_sparse_pauli
+    from qcoptlib.quantum.qiskit_backend import qubo_to_sparse_pauli
     from qiskit.quantum_info import Statevector, SparsePauliOp
 
     q = QUBO.zeros(3)

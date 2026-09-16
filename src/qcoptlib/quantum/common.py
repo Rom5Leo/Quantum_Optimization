@@ -2,7 +2,7 @@
 
 The parts of a QAOA solve that don't depend on Qiskit or Classiq: how to initialise the
 variational angles, how to hold a result, and how to pick the best sampled bitstring. Both
-:mod:`qc_core.qaoa.qiskit_backend` and :mod:`qc_core.qaoa.classiq_backend` build on this, so
+:mod:`optlib.quantum.qiskit_backend` and :mod:`optlib.quantum.classiq_backend` build on this, so
 the schedule and read-out logic is written once and shared.
 """
 
@@ -13,7 +13,7 @@ from typing import Mapping
 
 import numpy as np
 
-from qc_core.qubo.core import QUBO
+from qcoptlib.qubo.core import QUBO
 
 
 def adiabatic_init(num_layers: int) -> np.ndarray:

@@ -1,6 +1,6 @@
 """Qiskit QAOA runner.
 
-Solves a :class:`~qc_core.qubo.core.QUBO` with QAOA on the Aer simulator, following the
+Solves a :class:`~optlib.qubo.core.QUBO` with QAOA on the Aer simulator, following the
 pattern from the inheritance-QAOA notebook: convert the QUBO to an Ising ``SparsePauliOp``,
 build a ``QAOAAnsatz``, transpile for Aer, optimise the angles with SciPy (EstimatorV2 in the
 loop), then sample the tuned circuit (SamplerV2) and read out the best bitstring.
@@ -21,8 +21,8 @@ from qiskit_aer import AerSimulator
 from qiskit_aer.primitives import EstimatorV2 as Estimator
 from qiskit_aer.primitives import SamplerV2 as Sampler
 
-from qc_core.qubo.core import QUBO
-from qc_core.qaoa.common import QAOAResult, adiabatic_init, best_bits_from_counts
+from qcoptlib.qubo.core import QUBO
+from qcoptlib.quantum.common import QAOAResult, adiabatic_init, best_bits_from_counts
 
 
 def qubo_to_sparse_pauli(qubo: QUBO) -> SparsePauliOp:

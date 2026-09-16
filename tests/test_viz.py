@@ -1,4 +1,4 @@
-"""Tests for qc_core.viz.plots.
+"""Tests for optlib.viz.plots.
 
 Plotting is hard to assert on numerically, so these are "smoke tests": they use the headless
 Agg backend and confirm each helper runs, returns an Axes, and draws the expected number of
@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 
-from qc_core.viz.plots import (
+from qcoptlib.viz.plots import (
     plot_convergence,
     plot_before_after,
     plot_counts,

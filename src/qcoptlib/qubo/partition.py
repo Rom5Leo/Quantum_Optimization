@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from qc_core.qubo.core import QUBO
+from qcoptlib.qubo.core import QUBO
 
 
 def partition_qubo(values) -> QUBO:

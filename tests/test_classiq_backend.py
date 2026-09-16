@@ -12,8 +12,8 @@ agrees with the Qiskit backend on a small partition instance.
 import numpy as np
 import pytest
 
-from qc_core.qubo.core import QUBO
-from qc_core.qaoa.classiq_backend import (
+from qcoptlib.qubo.core import QUBO
+from qcoptlib.quantum.classiq_backend import (
     qubo_to_pauli_terms,
     _parsed_counts_to_histogram,
 )

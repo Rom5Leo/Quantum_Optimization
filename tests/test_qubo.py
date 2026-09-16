@@ -1,4 +1,4 @@
-"""Tests for qc_core.qubo — the QUBO container and the partition builder.
+"""Tests for optlib.qubo — the QUBO container and the partition builder.
 
 Ground-truth checks:
 - the container's energy/brute_force/to_ising against hand-computable cases,
@@ -9,8 +9,8 @@ Ground-truth checks:
 import numpy as np
 import pytest
 
-from qc_core.qubo.core import QUBO
-from qc_core.qubo.partition import partition_qubo, split_from_bits
+from qcoptlib.qubo.core import QUBO
+from qcoptlib.qubo.partition import partition_qubo, split_from_bits
 
 
 # ----------------------------- container -----------------------------

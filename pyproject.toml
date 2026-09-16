@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "qc-core"
+name = "qcoptlib"
 version = "0.1.0"
 description = "Reusable quantum-optimization library: QAOA, QUBO, RF models, on Classiq/Qmod"
 authors = ["Rom5Leo"]
 readme = "README.md"
-packages = [{ include = "qc_core", from = "src" }]
+packages = [{ include = "qcoptlib", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
