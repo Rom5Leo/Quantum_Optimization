@@ -7,7 +7,7 @@ A QUBO is the standard form that QAOA and quantum annealers consume:
 over binary variables x[v] in {0, 1}. This module holds that object and the operations
 that don't depend on any quantum backend — building it, evaluating it, brute-forcing it,
 and converting it to the Ising (Z/ZZ) form. Problem-specific builders (see
-:mod:`optlib.qubo.partition`) construct a :class:`QUBO`; the QAOA layer consumes one.
+:mod:`qcoptlib.qubo.partition`) construct a :class:`QUBO`; the QAOA layer consumes one.
 
 The linear/quadratic/constant split mirrors the standard QUBO tutorials (Glover et al.) and
 keeps everything pure NumPy so the same object runs through a Qiskit or a Classiq backend.

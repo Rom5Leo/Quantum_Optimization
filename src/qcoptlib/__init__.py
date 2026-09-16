@@ -1,1 +1,1 @@
-"""optlib — reusable optimization + quantum-solver library."""
+"""qcoptlib — reusable optimization + quantum-solver library."""

@@ -1,8 +1,8 @@
 """Qiskit QAOA runner.
 
-Solves a :class:`~optlib.qubo.core.QUBO` with QAOA on the Aer simulator, following the
+Solves a :class:`~qcoptlib.qubo.core.QUBO` with QAOA on the Aer simulator, following the
 pattern from the inheritance-QAOA notebook: convert the QUBO to an Ising ``SparsePauliOp``,
-build a ``QAOAAnsatz``, transpile for Aer, optimise the angles with SciPy (EstimatorV2 in the
+build a ``qaoa_ansatz``, transpile for Aer, optimise the angles with SciPy (EstimatorV2 in the
 loop), then sample the tuned circuit (SamplerV2) and read out the best bitstring.
 
 This backend is fully runnable locally (no account needed), so it doubles as the reference
@@ -14,7 +14,7 @@ from __future__ import annotations
 import numpy as np
 from scipy.optimize import minimize
 
-from qiskit.circuit.library import QAOAAnsatz
+from qiskit.circuit.library import qaoa_ansatz
 from qiskit.quantum_info import SparsePauliOp
 from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
 from qiskit_aer import AerSimulator
@@ -83,9 +83,9 @@ def solve_qubo_qaoa(
     rng = np.random.default_rng(seed)
 
     cost_op = qubo_to_sparse_pauli(qubo)
-    ansatz = QAOAAnsatz(cost_operator=cost_op, reps=num_layers)
+    ansatz = qaoa_ansatz(cost_operator=cost_op, reps=num_layers)
 
-    # transpile to basis gates so Aer can run it (raw QAOAAnsatz has a high-level instruction)
+    # transpile to basis gates so Aer can run it (raw qaoa_ansatz has a high-level instruction)
     backend = AerSimulator()
     pm = generate_preset_pass_manager(backend=backend, optimization_level=1)
     ansatz_isa = pm.run(ansatz)

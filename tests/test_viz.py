@@ -1,4 +1,4 @@
-"""Tests for optlib.viz.plots.
+"""Tests for qcoptlib.viz.plots.
 
 Plotting is hard to assert on numerically, so these are "smoke tests": they use the headless
 Agg backend and confirm each helper runs, returns an Axes, and draws the expected number of

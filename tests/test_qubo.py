@@ -1,4 +1,4 @@
-"""Tests for optlib.qubo — the QUBO container and the partition builder.
+"""Tests for qcoptlib.qubo — the QUBO container and the partition builder.
 
 Ground-truth checks:
 - the container's energy/brute_force/to_ising against hand-computable cases,

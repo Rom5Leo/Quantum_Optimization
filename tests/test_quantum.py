@@ -1,4 +1,4 @@
-"""Tests for optlib.quantum.
+"""Tests for qcoptlib.quantum.
 
 - Shared helpers (adiabatic_init, best_bits_from_counts) — fast, deterministic.
 - Qiskit backend — end-to-end on a small partition problem, checked against brute force.

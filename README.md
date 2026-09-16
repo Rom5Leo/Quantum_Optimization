@@ -1,40 +1,33 @@
-# Quantum Computation
+# quantum-optimization (`qcoptlib`)
 
-Reusable quantum-optimization library, learning material, and the QUBIT×AT&T
-Hackathon 2026 solution — built on Classiq / Qmod.
+A reusable library of **quantum solvers for combinatorial optimization**, built on Classiq
+and Qiskit. QUBO construction, QAOA (two backends), and the read-out/plotting helpers that
+sit around a variational solve.
 
-## Goal
+This is a **library**, not an application. Domain problems (telecom, finance, …) live in
+their own repositories and depend on this one to solve their QUBOs with quantum methods.
 
-Build a professional quantum-computing codebase around QAOA and combinatorial
-optimization: a reusable core library, a set of learning notebooks, and real
-telecom optimization problems tackled as staged projects.
+## What's inside
 
-## Contents
-
-| Path | What it is |
+| Package | What it does |
 |---|---|
-| `src/qc_core/` | Reusable library — QAOA ansatz/encodings, QUBO assembly, RF models, plotting |
-| `notebooks/learning/` | Practice notebooks (Qiskit basics, Grover, QAOA encodings) |
-| `notebooks/classiq_workshop/` | Classiq/Qmod workshop material |
-| `hackathon-2026/` | The AT&T hackathon: team solution, an alternative approach, and their comparison |
-| `docs/` | Concept write-ups and cited RF references |
+| `qcoptlib.qubo` | Build QUBOs (linear + quadratic + constant), evaluate, brute-force, convert to Ising. Includes a number-partitioning demo builder. |
+| `qcoptlib.quantum` | QAOA runners — `qiskit_backend` (Aer, fully local) and `classiq_backend` (Classiq simulator). Shared angle-init and read-out in `common`. Grover / QML planned. |
+| `qcoptlib.viz` | Plotting helpers: convergence, sampled-counts, before/after, 2-D network. |
 
-## The three challenge projects
+## The pipeline
 
-The hackathon seeded three telecom optimization problems, each continued as its own
-staged project repository that depends on this library:
-
-- [antenna-tilt-qc](https://github.com/Rom5Leo/antenna-tilt-qc) — antenna down-tilt optimization
-- [dispatch-qc](https://github.com/Rom5Leo/dispatch-qc) — field-technician dispatch (VRP)
-- [routing-qc](https://github.com/Rom5Leo/routing-qc) — network traffic routing
-
-Each treats quantum computing as **one component** of a hybrid solution, not the whole
-answer — the honest and effective framing for near-term quantum optimization.
+    problem  ->  QUBO (qcoptlib.qubo)  ->  QAOA solve (qcoptlib.quantum)  ->  read out + plot (qcoptlib.viz)
 
 ## Install
 
     poetry install
+    poetry run pytest -v        # 24 tests
 
-## Stack
+`classiq` is an optional extra — the library imports and tests without it; you only need it
+to execute the Classiq backend.
 
-Python · Poetry · Classiq (Qmod) · NumPy · Pyomo · matplotlib
+## Roadmap
+- [x] QUBO layer + QAOA (Qiskit + Classiq)
+- [ ] Grover / amplitude amplification
+- [ ] QML solvers

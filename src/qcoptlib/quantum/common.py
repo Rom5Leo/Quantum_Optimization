@@ -2,7 +2,7 @@
 
 The parts of a QAOA solve that don't depend on Qiskit or Classiq: how to initialise the
 variational angles, how to hold a result, and how to pick the best sampled bitstring. Both
-:mod:`optlib.quantum.qiskit_backend` and :mod:`optlib.quantum.classiq_backend` build on this, so
+:mod:`qcoptlib.quantum.qiskit_backend` and :mod:`qcoptlib.quantum.classiq_backend` build on this, so
 the schedule and read-out logic is written once and shared.
 """
 

@@ -1,6 +1,6 @@
 """Classiq QAOA runner.
 
-Solves a :class:`~optlib.qubo.core.QUBO` with QAOA on the Classiq simulator, following the
+Solves a :class:`~qcoptlib.qubo.core.QUBO` with QAOA on the Classiq simulator, following the
 verified pattern from the antenna notebooks: build the parametric ``main`` circuit, drive it
 from Python with ``ExecutionSession`` + SciPy (NOT the IDE Execute button), then decode the
 sampled result with the shared read-out helpers.
