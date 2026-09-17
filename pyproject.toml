@@ -12,7 +12,7 @@ numpy = "^1.26"
 scipy = "^1.12"
 matplotlib = "^3.8"
 qiskit = "^2.0"
-qiskit-aer = "^0.15"
+qiskit-aer = ">=0.17"  # 0.17+ is the first Aer release compatible with Qiskit 2.x
 # classiq is optional: only needed to RUN the Classiq backend, not to import the library.
 # add it when you want that backend:  poetry add classiq
 
