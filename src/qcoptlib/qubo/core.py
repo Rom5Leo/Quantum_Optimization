@@ -11,6 +11,10 @@ and converting it to the Ising (Z/ZZ) form. Problem-specific builders (see
 
 The linear/quadratic/constant split mirrors the standard QUBO tutorials (Glover et al.) and
 keeps everything pure NumPy so the same object runs through a Qiskit or a Classiq backend.
+
+QUBOs compose: :meth:`scaled` and :meth:`__add__` let you weight and sum objectives that
+share the same variables (e.g. balance *value* and balance *risk* in the same split), which
+is exactly the linearity that makes multi-objective QUBO modelling clean.
 """
 
 from __future__ import annotations
@@ -91,6 +95,39 @@ class QUBO:
             if e < best_e:
                 best_x, best_e = bits, e
         return best_x, best_e
+
+    # ---- composition (weight and sum objectives over the same variables) ----
+
+    def copy(self) -> "QUBO":
+        """A deep copy — useful before mutating a shared builder result."""
+        return QUBO(n=self.n, h=self.h.copy(), J=self.J.copy(), const=self.const)
+
+    def scaled(self, factor: float) -> "QUBO":
+        """Return a new QUBO with every coefficient multiplied by ``factor``.
+
+        Scaling a cost by a positive factor leaves the argmin unchanged; it is how a
+        weighted objective (e.g. ``lambda * risk_term``) is expressed before summing.
+        """
+        return QUBO(n=self.n, h=self.h * factor, J=self.J * factor, const=self.const * factor)
+
+    def __add__(self, other: "QUBO") -> "QUBO":
+        """Sum two QUBOs over the same variables (coefficient-wise).
+
+        The QUBO cost is linear in its coefficients, so ``(A + B).energy(x) ==
+        A.energy(x) + B.energy(x)`` for every ``x``. This is what lets a multi-objective
+        model — value balance + risk balance + gap variance — be built as a sum of
+        independently-derived terms.
+        """
+        if isinstance(other, (int, float)) and other == 0:
+            return self.copy()  # identity, so sum([...]) works (starts from int 0)
+        if not isinstance(other, QUBO):
+            return NotImplemented
+        if other.n != self.n:
+            raise ValueError(f"QUBO size mismatch: {self.n} vs {other.n}")
+        return QUBO(n=self.n, h=self.h + other.h, J=self.J + other.J,
+                    const=self.const + other.const)
+
+    __radd__ = __add__  # so sum([...]) works (starts from int 0)
 
     def to_ising(self) -> tuple[np.ndarray, np.ndarray, float]:
         """Convert to Ising form over spins s in {-1, +1} via ``x = (1 - s) / 2``.
