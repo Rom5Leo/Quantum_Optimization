@@ -23,3 +23,7 @@ build/
 # Data / outputs
 outputs/
 *.qprog
+
+# === For Self use ===
+
+CONTEXT.md
