@@ -7,6 +7,16 @@ loop), then sample the tuned circuit (SamplerV2) and read out the best bitstring
 
 This backend is fully runnable locally (no account needed), so it doubles as the reference
 implementation the Classiq backend is checked against on small instances.
+
+Early stopping
+--------------
+COBYLA is run with a generous ``maxiter`` cap, but the angle optimisation usually flattens long
+before that. :func:`solve_qubo_qaoa` therefore watches the cost inside the objective and stops a
+restart once it has not improved by more than ``tol`` for ``patience`` consecutive evaluations
+(subject to a small minimum so it never quits on the first plateau). This both saves time and,
+by running *until* convergence rather than a fixed count, is the professional version of "add a
+few more iterations if it hasn't converged yet": raise ``maxiter`` and the plateau detector, not
+the counter, decides when to stop.
 """
 
 from __future__ import annotations
@@ -23,6 +33,10 @@ from qiskit_aer.primitives import SamplerV2 as Sampler
 
 from qcoptlib.qubo.core import QUBO
 from qcoptlib.quantum.common import QAOAResult, adiabatic_init, best_bits_from_counts
+
+
+class _Converged(Exception):
+    """Raised inside the objective to stop a restart once the cost has plateaued."""
 
 
 def qubo_to_sparse_pauli(qubo: QUBO) -> SparsePauliOp:
@@ -61,6 +75,9 @@ def solve_qubo_qaoa(
     shots: int = 4096,
     restarts: int = 1,
     seed: int | None = None,
+    early_stopping: bool = True,
+    tol: float = 1e-3,
+    patience: int = 12,
 ) -> QAOAResult:
     """Solve a QUBO with QAOA on the Aer simulator.
 
@@ -68,17 +85,23 @@ def solve_qubo_qaoa(
     ----------
     qubo       : the problem.
     num_layers : QAOA depth p.
-    maxiter    : COBYLA iterations per restart.
+    maxiter    : COBYLA evaluation cap per restart (a ceiling, not a target — see early stopping).
     shots      : samples when reading out the tuned circuit.
     restarts   : random restarts; the best (lowest optimised cost) is kept. The first
                  restart uses the adiabatic init, the rest random, so restarts>=1 never
                  does worse than the principled start.
     seed       : RNG seed for reproducible restarts.
+    early_stopping : stop a restart once the cost has plateaued (default True).
+    tol        : an evaluation counts as "improvement" only if it beats the best-so-far by
+                 more than this.
+    patience   : stop after this many consecutive non-improving evaluations (once at least
+                 ``max(patience, 2*num_layers+2)`` evaluations have been taken).
 
     Returns
     -------
     QAOAResult with the best sampled bitstring (lowest QUBO energy), its energy, the full
-    counts, the tuned angles, and the optimiser history of the winning restart.
+    counts, the tuned angles, and the optimiser history of the winning restart. The length of
+    ``history`` reflects where early stopping kicked in.
     """
     rng = np.random.default_rng(seed)
 
@@ -92,21 +115,34 @@ def solve_qubo_qaoa(
     cost_isa = cost_op.apply_layout(ansatz_isa.layout)
 
     estimator = Estimator()
+    min_evals = max(patience, 2 * num_layers + 2)
 
-    def cost_fn(params, history):
+    def cost_fn(params, state):
         pub = (ansatz_isa, [cost_isa], [params])
         value = float(estimator.run([pub]).result()[0].data.evs[0])
-        history.append(value)
+        state["history"].append(value)
+        if value < state["best"] - tol:          # meaningful improvement
+            state["best"] = value
+            state["best_x"] = np.asarray(params, dtype=float).copy()
+            state["stall"] = 0
+        else:
+            state["stall"] += 1
+        if (early_stopping and state["stall"] >= patience
+                and len(state["history"]) >= min_evals):
+            raise _Converged
         return value
 
     best = None
     for r in range(max(restarts, 1)):
         x0 = adiabatic_init(num_layers) if r == 0 else rng.uniform(0, np.pi, 2 * num_layers)
-        history: list[float] = []
-        res = minimize(cost_fn, x0, args=(history,), method="COBYLA",
-                       options={"maxiter": maxiter})
-        if best is None or res.fun < best[0]:
-            best = (res.fun, res.x, history)
+        state = {"history": [], "best": float("inf"), "best_x": np.asarray(x0, float), "stall": 0}
+        try:
+            minimize(cost_fn, x0, args=(state,), method="COBYLA", options={"maxiter": maxiter})
+        except _Converged:
+            pass  # plateaued; state holds the best-seen params
+        cand = (state["best"], state["best_x"], state["history"])
+        if best is None or cand[0] < best[0]:
+            best = cand
 
     _best_cost, best_params, best_history = best
 
