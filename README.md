@@ -53,5 +53,3 @@ Every builder returns the same `QUBO` object; every backend consumes it. Brute f
 - [x] Stochastic / robust partition builders; QAOA disk cache
 - [ ] Grover / amplitude amplification
 - [ ] QML solvers
-
-See `CONTEXT.md` for the working map of the two repos and their relationship.

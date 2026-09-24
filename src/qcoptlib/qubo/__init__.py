@@ -9,6 +9,11 @@ from qcoptlib.qubo.partition import (
     split_report,
     SplitReport,
 )
+from qcoptlib.qubo.constraints import (
+    equality_penalty,
+    onehot_penalty,
+    inequality_padding,
+)
 
 __all__ = [
     "QUBO",
@@ -18,4 +23,7 @@ __all__ = [
     "gap_variance_qubo",
     "split_report",
     "SplitReport",
+    "equality_penalty",
+    "onehot_penalty",
+    "inequality_padding",
 ]
