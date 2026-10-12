@@ -8,7 +8,7 @@ This is a **library**, not an application. Domain problems (telecom, and later d
 routing) live in their own repositories and depend on this one to turn their QUBOs into quantum
 solves. Classical-first, quantum as a pluggable, honestly-benchmarked component.
 
-> **Status: in build.** The QUBO + QAOA core is complete and tested; Grover / QML are planned.
+> **Status: in build.** The QUBO + QAOA + Grover core is complete and tested; QML is planned.
 > APIs may still shift as the domain repos exercise them.
 
 ## What's inside
@@ -16,7 +16,7 @@ solves. Classical-first, quantum as a pluggable, honestly-benchmarked component.
 | Package | What it does |
 |---|---|
 | `qcoptlib.qubo` | Build QUBOs (linear + quadratic + constant); `energy`, `brute_force`, `to_ising`; **compose** them (`scaled`, `__add__`) to weight and sum objectives over the same variables. Problem builders: `partition_qubo` (number partitioning / fair split) and `stochastic_partition_qubo` (splitting under value uncertainty — value balance + risk balance + gap-variance), with `split_report` read-out. |
-| `qcoptlib.quantum` | QAOA runners — `qiskit_backend` (Aer, fully local) and `classiq_backend` (Classiq simulator); shared angle-init and score-and-keep-best read-out in `common`; **`cache.cached_qaoa`** memoizes solves to disk so notebooks don't recompute unchanged runs. |
+| `qcoptlib.quantum` | QAOA runners — `qiskit_backend` (Aer, fully local) and `classiq_backend` (Classiq simulator); shared angle-init and score-and-keep-best read-out in `common`; **`cache.cached_qaoa`** memoizes solves to disk. Also **`grover`** — exact NumPy-statevector Grover / amplitude amplification and Grover Adaptive Search (`grover_search`, `grover_adaptive_search`). |
 | `qcoptlib.viz` | Plotting helpers: convergence, sampled-counts, before/after, 2-D network — each draws onto a given Axes. |
 
 ## The pipeline
@@ -27,10 +27,11 @@ Every builder returns the same `QUBO` object; every backend consumes it. Brute f
 (`QUBO.brute_force`) is the ground-truth check on small instances.
 
 ## Notebooks
-- `notebooks/inheritance_demo.ipynb` — the flagship demo: number partitioning as a *fair
+- `notebooks/learning/` — a concept series grounded in the library: `01_qaoa` (QAOA end-to-end) and
+  `02_grover` (Grover / amplitude amplification + Grover Adaptive Search) are up; `03_qml` planned.
+- `notebooks/learning/inheritance_demo.ipynb` — the flagship demo: number partitioning as a *fair
   inheritance split*, then splitting **under uncertainty** (the counter-intuitive
   constant-variance result, risk-balancing, and correlations). See `notebooks/README.md`.
-- A **QC learning notebook** distilling the QAOA workshop / hackathon material is in progress.
 
 ## Design notes
 - QAOA read-out scores every sampled bitstring by real QUBO energy and keeps the best, so a
@@ -51,5 +52,5 @@ Every builder returns the same `QUBO` object; every backend consumes it. Brute f
 ## Roadmap
 - [x] QUBO layer (+ composition) and QAOA (Qiskit + Classiq)
 - [x] Stochastic / robust partition builders; QAOA disk cache
-- [ ] Grover / amplitude amplification
+- [x] Grover / amplitude amplification (+ Grover Adaptive Search)
 - [ ] QML solvers
